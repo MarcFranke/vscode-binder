@@ -1,7 +1,4 @@
 #!/bin/bash
-# Set code-server as the default interface
-echo "c.ServerApp.default_url = '/vscode'" >> ~/.jupyter/jupyter_server_config.py
-
 
 echo 'export PS1=" "' >> ~/.bashrc
 code-server --install-extension ms-python.python
