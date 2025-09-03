@@ -1,5 +1,5 @@
 # example.py - Beispiele für die Datenstrukturen
-from datastructures import Stack, Queue, DynArray, BinTree
+from ADT import Stack, Queue, DynArray, BinTree
 
 # Stack Demo - LIFO (Last In, First Out)
 stapel = Stack()

@@ -22,6 +22,11 @@ classifiers = [
 requires-python = ">=3.8"
 license = {text = "BSD-3-clause"}
 
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["jupyter_vscode_proxy*"]
+exclude = ["student*","examples*"]
+
 [project.urls]
 repository = "https://github.com/betatim/vscode-binder"
 
