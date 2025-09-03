@@ -1,7 +1,8 @@
 #!/bin/bash
-
+echo 'export PS1=" "' >> ~/.bashrc
 code-server --install-extension ms-python.python
 code-server --install-extension ms-toolsai.jupyter
+code-server --install-extension formulahendry.code-runner
 
 # Install the VS code proxy
 pip install -e.
