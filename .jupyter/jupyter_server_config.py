@@ -1,1 +1,0 @@
-c.ServerApp.default_url = '/vscode'
