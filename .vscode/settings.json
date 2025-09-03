@@ -7,20 +7,25 @@
         "**/.local": true,
         "**/.npm": true,
         "**/.yarn": true,
-        "**/jupyter_vscode_proxy.egg-info": true
-        "**/jupyter_vscode_proxy": true
-        "**/.vscode": true
-        "**/.github": true
-        "**/.env": true
-        "**/.flake8": true
-        "**/.gitignore": true
-        "**/.pre-commit-config.yaml": true
-        "**/LICENCE": true
-        "**/MANIFEST.in": true
-        "**/README.md": true
-        "**/environment.yml": true
-        "**/postbuild": true
+        "**/jupyter_vscode_proxy.egg-info": true,
+        "**/jupyter_vscode_proxy": true,
+        "**/.vscode": true,
+        "**/.mamba": true,
+        "**/.github": true,
+        "**/.ipython": true,
+        "**/.bash_logout": true,
+        "**/.profile": true,
+        "**/.jupyter-server-log.txt": true,
+        "**/.env": true,
+        "**/.flake8": true,
+        "**/.gitignore": true,
+        "**/.pre-commit-config.yaml": true,
+        "**/LICENSE": true,
+        "**/MANIFEST.in": true,
+        "**/README.md": true,
+        "**/environment.yml": true,
+        "**/postBuild": true,
         "**/pyproject.toml": true
-    }
-    "workbench.colorTheme": "Dark Modern"
+    },
+    "workbench.colorTheme": "Default Dark Modern"
 }
