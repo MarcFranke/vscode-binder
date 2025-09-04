@@ -10,59 +10,61 @@ class BinTree(object):
         self.left = None
         self.right = None
 
-    def has_item(self):
+    def hasItem(self):
         """
         Gibt True zurück, falls ein Wurzelinhalt gesetzt ist.
         """
         return self.inhalt is not None
 
-    def get_item(self):
+    def getItem(self):
         """
         Liefert den Wurzelinhalt,
         oder wirft RuntimeError, wenn keiner vorhanden ist.
         """
-        if self.has_item():
+        if self.hasItem():
             return self.inhalt
         else:
             raise RuntimeError("Es gibt keinen Wurzelinhalt.")
 
-    def set_item(self, inhalt):
+    def setItem(self, inhalt):
         """
         Setzt den Wurzelinhalt auf inhalt.
         """
         self.inhalt = inhalt
 
-    def delete_item(self):
+    def deleteItem(self):
         """
         Löscht den Wurzelinhalt (setzt ihn auf None).
         """
         self.inhalt = None
 
-    def is_leaf(self):
+    def isLeaf(self):
         """
         True, wenn kein linker und kein rechter Teilbaum existiert.
         """
         return (self.left is None) and (self.right is None)
 
-    def has_left(self):
+    def hasLeft(self):
         """
         True, wenn ein linker Teilbaum existiert.
         """
         return self.left is not None
 
-    def get_left(self):
+    def getLeft(self):
         """
         Gibt den linken Teilbaum zurück oder None.
         """
         return self.left
 
-    def set_left(self, b):
+    def setLeft(self, b):
         """
         Setzt den linken Teilbaum auf b.
         """
+        if b is not None and not isinstance(b, BinTree):
+            raise TypeError("left child must be a BinTree or None")
         self.left = b
 
-    def delete_left(self):
+    def deleteLeft(self):
         """
         Löscht den linken Teilbaum,
         wirft RuntimeError, falls keiner existiert.
@@ -71,25 +73,27 @@ class BinTree(object):
             raise RuntimeError("Kein linker Teilbaum vorhanden.")
         self.left = None
 
-    def has_right(self):
+    def hasRight(self):
         """
         True, wenn ein rechter Teilbaum existiert.
         """
         return self.right is not None
 
-    def get_right(self):
+    def getRight(self):
         """
         Gibt den rechten Teilbaum zurück oder None.
         """
         return self.right
 
-    def set_right(self, b):
+    def setRight(self, b):
         """
         Setzt den rechten Teilbaum auf b.
         """
+        if b is not None and not isinstance(b, BinTree):
+            raise TypeError("right child must be a BinTree or None")
         self.right = b
 
-    def delete_right(self):
+    def deleteRight(self):
         """
         Löscht den rechten Teilbaum,
         wirft RuntimeError, falls keiner existiert.
