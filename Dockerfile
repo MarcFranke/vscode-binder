@@ -1,6 +1,6 @@
 FROM jupyter/base-notebook:latest
 USER root
-
+RUN apt-get update && apt-get install -yq curl
 RUN curl -fsSL https://code-server.dev/install.sh | sh
 
 RUN pip install jupyter-code-server jupyter-server-proxy
