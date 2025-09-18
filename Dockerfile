@@ -12,9 +12,7 @@ RUN wget ${CODESERVER_URL} && \
     rm -rf code-server* && \
     rm -rf /tmp/* && \
     rm -rf $HOME/.cache && \
-    rm -rf $HOME/.node-gyp && \
-    fix-permissions $CONDA_DIR && \
-    fix-permissions $HOME
+    rm -rf $HOME/.node-gyp
 
 
 # add requirements.txt, written this way to gracefully ignore a missing file
@@ -35,9 +33,9 @@ RUN unzip ijava-kernel.zip -d ijava-kernel \
 
 # Set up the user environment
 
-ENV NB_USER jovyan
-ENV NB_UID 1000
-ENV HOME /home/$NB_USER
+ENV NB_USER="jovyan"
+ENV NB_UID="1000"
+ENV HOME="/home/$NB_USER"
 
 RUN adduser --disabled-password \
     --gecos "Default user" \
