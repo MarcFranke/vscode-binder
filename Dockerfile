@@ -1,7 +1,5 @@
-FROM eclipse-temurin:21-jdk-jammy
-
-RUN apt-get update
-RUN apt-get install -y python3-pip unzip wget
+FROM jupyter/minimal-notebook:latest
+USER root
 
 ENV CODESERVER_URL="https://github.com/cdr/code-server/releases/download/1.1119-vsc1.33.1/code-server1.1119-vsc1.33.1-linux-x64.tar.gz" \
     CODESERVER="code-server1.1119-vsc1.33.1-linux-x64"
@@ -14,39 +12,21 @@ RUN wget ${CODESERVER_URL} && \
     rm -rf $HOME/.cache && \
     rm -rf $HOME/.node-gyp
 
+# Install Node.js 18.x and npm, die für viele Jupyter-Erweiterungen erforderlich sind
+RUN apt-get update && apt-get install -yq curl \
+    && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -yq nodejs
 
-# add requirements.txt, written this way to gracefully ignore a missing file
-COPY requirements.tx[t] .
-RUN ([ -f requirements.txt ] \
-    && pip3 install --no-cache-dir -r requirements.txt) \
-        || pip3 install --no-cache-dir jupyter jupyterlab jupyter-vscode-server jupyter-server-proxy numpy
+RUN pip install matplotlib jupyterlab-myst jupyter-book 'jupyterlab_pygments==0.3.0' ipywidgets tldraw ipyflex jupyter_nbextensions_configurator jupyter_contrib_nbextensions 'ipysheet==0.7.0' 'ipysketch-lite==0.4.2' qgridnext Pillow 'marimo>=0.6.21' jupyter-marimo-proxy nbgitpuller jupyterlab-git aquirdturtle_collapsible_headings ipydatagrid ipydrawio ipydrawio-export jupyterlab_rise jupyter-code-server jupyter-server-proxy
+# RUN pip install jupyter-wysiwyg
 
-USER root
+#RUN code-server --install-extension ms-python.python
+#RUN code-server --install-extension ms-toolsai.jupyter
+#RUN code-server --install-extension formulahendry.code-runner
 
-# Download the kernel release
-RUN curl -L https://github.com/SpencerPark/IJava/releases/download/v1.3.0/ijava-1.3.0.zip > ijava-kernel.zip
+RUN jupyter lab build
 
-# Unpack and install the kernel
-RUN unzip ijava-kernel.zip -d ijava-kernel \
-  && cd ijava-kernel \
-  && python3 install.py --sys-prefix
-
-# Set up the user environment
-
-ENV NB_USER="jovyan"
-ENV NB_UID="1000"
-ENV HOME="/home/$NB_USER"
-
-RUN adduser --disabled-password \
-    --gecos "Default user" \
-    --uid $NB_UID \
-    $NB_USER
-
-COPY . $HOME
-RUN chown -R $NB_UID $HOME
-
+# Zurückschalten zum Nicht-Root-Benutzer
 USER $NB_USER
 
-# Launch the notebook server
-WORKDIR $HOME
-CMD ["jupyter", "notebook", "--ip", "0.0.0.0", "--no-browser"]
+
