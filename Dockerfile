@@ -1,7 +1,9 @@
-FROM jupyter/minimal-notebook:latest
+FROM jupyter/base-notebook:latest
 USER root
 
 RUN curl -fsSL https://code-server.dev/install.sh | sh
+
+RUN pip install jupyter-code-server jupyter-server-proxy
 
 # Set environment variables for Java 25
 ENV JAVA_HOME=/opt/jdk-25
@@ -15,6 +17,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends wget \
     && rm /tmp/openjdk.tar.gz \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+RUN curl -L https://github.com/SpencerPark/IJava/releases/download/v1.3.0/ijava-1.3.0.zip > ijava-kernel.zip
+
+# Unpack and install the kernel
+RUN unzip ijava-kernel.zip -d ijava-kernel \
+  && cd ijava-kernel \
+  && python3 install.py --sys-prefix
+
+ENV CODE_DISABLE_PASSWORD="True"
 
 RUN code-server --install-extension ms-python.python
 RUN code-server --install-extension ms-toolsai.jupyter
