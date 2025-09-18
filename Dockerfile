@@ -32,7 +32,5 @@ RUN code-server --install-extension ms-toolsai.jupyter
 RUN code-server --install-extension formulahendry.code-runner
 RUN code-server --install-extension vscjava.vscode-java-pack
 
-RUN jupyter lab build
-
 # Switch back to the non-root user
 USER $NB_USER
