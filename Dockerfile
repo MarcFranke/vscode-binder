@@ -1,5 +1,18 @@
 FROM eclipse-temurin:21-jdk-jammy
 
+ENV CODESERVER_URL="https://github.com/cdr/code-server/releases/download/1.1119-vsc1.33.1/code-server1.1119-vsc1.33.1-linux-x64.tar.gz" \
+    CODESERVER="code-server1.1119-vsc1.33.1-linux-x64"
+
+RUN wget ${CODESERVER_URL} && \
+    tar xvf ${CODESERVER}.tar.gz && \
+    mv ${CODESERVER}/code-server /usr/local/bin/ && \
+    rm -rf code-server* && \
+    rm -rf /tmp/* && \
+    rm -rf $HOME/.cache && \
+    rm -rf $HOME/.node-gyp && \
+    fix-permissions $CONDA_DIR && \
+    fix-permissions $HOME
+
 RUN apt-get update
 RUN apt-get install -y python3-pip unzip
 
@@ -7,7 +20,7 @@ RUN apt-get install -y python3-pip unzip
 COPY requirements.tx[t] .
 RUN ([ -f requirements.txt ] \
     && pip3 install --no-cache-dir -r requirements.txt) \
-        || pip3 install --no-cache-dir jupyter jupyterlab
+        || pip3 install --no-cache-dir jupyter jupyterlab jupyter-vscode-server jupyter-server-proxy numpy
 
 USER root
 
