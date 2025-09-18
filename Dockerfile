@@ -15,7 +15,7 @@ ENV PATH="$JAVA_HOME/bin:$PATH"
 # Download and install OpenJDK 25
 RUN apt-get update && apt-get install -y --no-install-recommends wget \
     && mkdir -p /opt \
-    && wget -O /tmp/openjdk.tar.gz https://download.java.net/java/early_access/jdk25/3/GPL/openjdk-25_linux-x64_bin.tar.gz \
+    && wget -O /tmp/openjdk.tar.gz https://download.java.net/java/GA/jdk25/bd75d5f9689641da8e1daabeccb5528b/36/GPL/openjdk-25_linux-x64_bin.tar.gz \
     && tar -zxvf /tmp/openjdk.tar.gz -C /opt \
     && rm /tmp/openjdk.tar.gz \
     && apt-get clean \
