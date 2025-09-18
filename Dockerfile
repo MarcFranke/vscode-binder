@@ -1,35 +1,35 @@
 FROM jupyter/minimal-notebook:latest
 USER root
 
-# Install code-server
 RUN curl -fsSL https://code-server.dev/install.sh | sh
 
-# Install Node.js 18.x and npm, required for many Jupyter extensions
-RUN apt-get update && apt-get install -yq curl gnupg ca-certificates \
+# Install Node.js 18.x and npm, which are required for many Jupyter extensions
+RUN apt-get update && apt-get install -yq curl \
     && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -yq nodejs
 
-# Install OpenJDK 25 from Adoptium
-RUN mkdir -p /etc/apt/keyrings \
-    && curl -fsSL https://packages.adoptium.net/artifactory/api/gpg/key/public | tee /etc/apt/keyrings/adoptium.asc \
-    && CODENAME="$(. /etc/os-release && echo $VERSION_CODENAME)" \
-    && echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb ${CODENAME} main" | tee /etc/apt/sources.list.d/adoptium.list \
-    && apt-get update \
-    && apt-get install -y temurin-25-jdk \
-    && java -version
+# Set environment variables for Java 25
+ENV JAVA_HOME=/opt/jdk-25
+ENV PATH="$JAVA_HOME/bin:$PATH"
 
-# Install Python/Jupyter extensions
+# Download and install OpenJDK 25
+RUN apt-get update && apt-get install -y --no-install-recommends wget \
+    && mkdir -p /opt \
+    && wget -O /tmp/openjdk.tar.gz https://download.java.net/java/early_access/jdk25/3/GPL/openjdk-25_linux-x64_bin.tar.gz \
+    && tar -zxvf /tmp/openjdk.tar.gz -C /opt \
+    && rm /tmp/openjdk.tar.gz \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN pip install matplotlib jupyterlab-myst jupyter-book 'jupyterlab_pygments==0.3.0' ipywidgets tldraw ipyflex jupyter_nbextensions_configurator jupyter_contrib_nbextensions 'ipysheet==0.7.0' 'ipysketch-lite==0.4.2' qgridnext Pillow 'marimo>=0.6.21' jupyter-marimo-proxy nbgitpuller jupyterlab-git aquirdturtle_collapsible_headings ipydatagrid ipydrawio ipydrawio-export jupyterlab_rise jupyter-code-server jupyter-server-proxy
 # RUN pip install jupyter-wysiwyg
 
-# Install VS Code extensions
-RUN code-server --install-extension ms-python.python \
-    && code-server --install-extension ms-toolsai.jupyter \
-    && code-server --install-extension formulahendry.code-runner \
-    && code-server --install-extension vscjava.vscode-java-pack
+RUN code-server --install-extension ms-python.python
+RUN code-server --install-extension ms-toolsai.jupyter
+RUN code-server --install-extension formulahendry.code-runner
+RUN code-server --install-extension vscjava.vscode-java-pack
 
-# Build JupyterLab
 RUN jupyter lab build
 
-# Switch back to non-root user
+# Switch back to the non-root user
 USER $NB_USER
