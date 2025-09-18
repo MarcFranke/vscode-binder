@@ -1,14 +1,40 @@
-# Use an existing image with Ubuntu or other Linux distros as a base
-FROM ubuntu:latest
+FROM eclipse-temurin:21-jdk-jammy
 
-# Install dependencies and OpenJDK 25
-RUN mkdir -p /usr/lib/jvm
-RUN apt-get update && apt-get install -y wget
-RUN wget https://download.java.net/java/GA/jdk25/bd75d5f9689641da8e1daabeccb5528b/36/GPL/openjdk-25_linux-aarch64_bin.tar.gz 
-RUN tar -zxf openjdk-25*_bin.tar.gz -C /usr/lib/jvm/
-RUN update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk-25/bin/java 1
-RUN update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/jdk-25/bin/javac 1
+RUN apt-get update
+RUN apt-get install -y python3-pip unzip
 
-# Set the JAVA_HOME environment variable
-ENV JAVA_HOME /usr/lib/jvm/java-25-openjdk-amd64
-ENV PATH $JAVA_HOME/bin:$PATH
+# add requirements.txt, written this way to gracefully ignore a missing file
+COPY requirements.tx[t] .
+RUN ([ -f requirements.txt ] \
+    && pip3 install --no-cache-dir -r requirements.txt) \
+        || pip3 install --no-cache-dir jupyter jupyterlab
+
+USER root
+
+# Download the kernel release
+RUN curl -L https://github.com/SpencerPark/IJava/releases/download/v1.3.0/ijava-1.3.0.zip > ijava-kernel.zip
+
+# Unpack and install the kernel
+RUN unzip ijava-kernel.zip -d ijava-kernel \
+  && cd ijava-kernel \
+  && python3 install.py --sys-prefix
+
+# Set up the user environment
+
+ENV NB_USER jovyan
+ENV NB_UID 1000
+ENV HOME /home/$NB_USER
+
+RUN adduser --disabled-password \
+    --gecos "Default user" \
+    --uid $NB_UID \
+    $NB_USER
+
+COPY . $HOME
+RUN chown -R $NB_UID $HOME
+
+USER $NB_USER
+
+# Launch the notebook server
+WORKDIR $HOME
+CMD ["jupyter", "notebook", "--ip", "0.0.0.0", "--no-browser"]
