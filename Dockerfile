@@ -1,5 +1,8 @@
 FROM eclipse-temurin:21-jdk-jammy
 
+RUN apt-get update
+RUN apt-get install -y python3-pip unzip wget
+
 ENV CODESERVER_URL="https://github.com/cdr/code-server/releases/download/1.1119-vsc1.33.1/code-server1.1119-vsc1.33.1-linux-x64.tar.gz" \
     CODESERVER="code-server1.1119-vsc1.33.1-linux-x64"
 
@@ -13,8 +16,6 @@ RUN wget ${CODESERVER_URL} && \
     fix-permissions $CONDA_DIR && \
     fix-permissions $HOME
 
-RUN apt-get update
-RUN apt-get install -y python3-pip unzip
 
 # add requirements.txt, written this way to gracefully ignore a missing file
 COPY requirements.tx[t] .
