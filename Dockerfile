@@ -12,7 +12,8 @@ RUN apt-get update && apt-get install -yq curl gnupg ca-certificates \
 # Install OpenJDK 25 from Adoptium
 RUN mkdir -p /etc/apt/keyrings \
     && curl -fsSL https://packages.adoptium.net/artifactory/api/gpg/key/public | tee /etc/apt/keyrings/adoptium.asc \
-    && echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/adoptium.list \
+    && CODENAME="$(. /etc/os-release && echo $VERSION_CODENAME)" \
+    && echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb ${CODENAME} main" | tee /etc/apt/sources.list.d/adoptium.list \
     && apt-get update \
     && apt-get install -y temurin-25-jdk \
     && java -version
