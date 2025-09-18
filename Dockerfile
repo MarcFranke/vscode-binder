@@ -3,7 +3,7 @@ FROM ubuntu:latest
 
 # Install dependencies and OpenJDK 25
 RUN mkdir -p /usr/lib/jvm
-RUN apt-get update && apt-get install wget
+RUN apt-get update && apt-get install -y wget
 RUN wget https://download.java.net/java/GA/jdk25/bd75d5f9689641da8e1daabeccb5528b/36/GPL/openjdk-25_linux-aarch64_bin.tar.gz 
 RUN tar -zxf openjdk-25*_bin.tar.gz -C /usr/lib/jvm/
 RUN update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk-25/bin/java 1
